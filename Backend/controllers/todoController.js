@@ -2,11 +2,22 @@ const { PrismaClient, Priority } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-const getTodoList = async (req, res) => {
+const getAllTodos = async (req, res) => {
   try {
+    const { query, priority } = req.query;
+
+    const whereClause = {
+      AND: [
+        query ? { title: { contains: query, mode: "insensitive" } } : {},
+        priority ? { priority: priority } : {},
+      ],
+    };
+
     const todos = await prisma.todo.findMany({
+      where: whereClause,
       orderBy: { id: "desc" },
     });
+
     res.json(todos);
   } catch (error) {
     res
@@ -14,6 +25,8 @@ const getTodoList = async (req, res) => {
       .json({ error: "Failed to fetch todos", details: error.message });
   }
 };
+
+
 
 const addTodo = async (req, res) => {
   try {
@@ -72,20 +85,6 @@ const deleteTodo = async (req, res) => {
   }
 };
 
-const searchTodos = async (req, res) => {
-  const { query } = req.query;
 
-  if (!query) {
-    const todos = await prisma.todo.findMany({ orderBy: { id: "desc" } });
-    return res.json(todos);
-  }
 
-  const todos = await prisma.todo.findMany({
-    where: { title: { contains: query, mode: "insensitive" } },
-    orderBy: { id: "desc" },
-  });
-
-  res.json(todos);
-};
-
-module.exports = { getTodoList, addTodo, updateTodo, deleteTodo, searchTodos }; // Corrected export for CommonJS
+module.exports = { getAllTodos, addTodo, updateTodo, deleteTodo }; // Corrected export for CommonJS
