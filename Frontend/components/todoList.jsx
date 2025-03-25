@@ -87,7 +87,6 @@ const TodoList = () => {
   const currentTodos = todos.slice(indexOfFirstTodo, indexOfLastTodo);
   const totalPages = Math.ceil(todos.length / todosPerPage);
 
-
   //UPLOAD BULK DATA
   const [file, setFile] = useState(null);
 
@@ -209,43 +208,60 @@ const TodoList = () => {
       </div>
 
       {/* Todo List */}
-      <ul className="space-y-3 p-4">
-        {currentTodos.length === 0 ? (
-          <p className="text-gray-500 text-center">
-            No todos found. Start adding some!
-          </p>
-        ) : (
-          currentTodos.map((todo) => (
-            <li
-              key={todo.id}
-              className="flex justify-between items-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition"
-            >
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={todo.completed}
-                  onChange={() => toggleTodo(todo.id, todo.completed)}
-                  className="form-checkbox h-5 w-5 text-blue-800"
-                />
-                <span className="text-lg font-medium text-gray-800">
-                  {todo.title}
-                </span>
-              </label>
-              <div>
-                <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset mr-5">
-                  {todo.priority}
-                </span>
-                <button
-                  onClick={() => deleteTodo(todo.id)}
-                  className="text-red-500 hover:text-red-700 transition text-md cursor-pointer hover:scale-110"
-                >
-                  ❌
-                </button>
-              </div>
-            </li>
-          ))
-        )}
-      </ul>
+      <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden my-5">
+        <thead className="bg-gray-100 border-b">
+          <tr>
+            <th className="py-3 px-6 text-left">
+              <input
+                type="checkbox"
+                className="form-checkbox h-5 w-5 text-blue-800"
+              />
+            </th>
+            <th className="py-3 px-6 text-left">Title</th>
+            <th className="py-3 px-6 text-left">Priority</th>
+            <th className="py-3 px-6 text-left">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentTodos.length === 0 ? (
+            <tr>
+              <td colSpan="4" className="text-gray-500 text-center py-4">
+                No todos found. Start adding some!
+              </td>
+            </tr>
+          ) : (
+            currentTodos.map((todo) => (
+              <tr
+                key={todo.id}
+                className="border-b hover:bg-gray-50 transition"
+              >
+                <td className="py-3 px-6">
+                  <input
+                    type="checkbox"
+                    checked={todo.completed}
+                    onChange={() => toggleTodo(todo.id, todo.completed)}
+                    className="form-checkbox h-5 w-5 text-blue-800"
+                  />
+                </td>
+                <td className="py-3 px-6">{todo.title}</td>
+                <td className="py-3 px-6">
+                  <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20">
+                    {todo.priority}
+                  </span>
+                </td>
+                <td className="py-3 px-6">
+                  <button
+                    onClick={() => deleteTodo(todo.id)}
+                    className="text-red-500 hover:text-red-700 transition text-md cursor-pointer hover:scale-110"
+                  >
+                    ❌
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
 
       {/* Pagination */}
       {totalPages > 1 && (
