@@ -8,17 +8,28 @@ const TodoList = () => {
   const todosPerPage = 5;
   const [searchQuery, setSearchQuery] = useState("");
   const [priority, setPriority] = useState("MEDIUM");
+  const [filterPriority, setFilterPriority] = useState(""); // Default: show all
 
   useEffect(() => {
     fetchTodos();
-  }, []);
+  }, [filterPriority]);
 
   const fetchTodos = async () => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/todos/getall`
       );
-      setTodos(response.data);
+      let fetchedTodos = response.data;
+
+      // Apply priority filter
+      if (filterPriority) {
+        fetchedTodos = fetchedTodos.filter(
+          (todo) => todo.priority === filterPriority
+        );
+      }
+
+      setTodos(fetchedTodos);
+      setCurrentPage(1); // Reset to first page on filter change
     } catch (error) {
       console.error("Error fetching todos:", error);
     }
@@ -31,13 +42,17 @@ const TodoList = () => {
   const totalPages = Math.ceil(todos.length / todosPerPage);
 
   //For Searchingg
- 
   const fetchTodosSearch = async (query = "") => {
     try {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/todos/search?query=${query}`
       );
       const data = await res.json();
+      // Apply priority filter
+      if (filterPriority) {
+        data = data.filter((todo) => todo.priority === filterPriority);
+      }
+
       setTodos(data);
       setCurrentPage(1);
     } catch (error) {
@@ -128,6 +143,7 @@ const TodoList = () => {
 
       {/* Todo List */}
       <div className="">
+        <div className="flex gap-3 items-center">
         <input
           type="text"
           placeholder="Search..."
@@ -135,6 +151,16 @@ const TodoList = () => {
           onChange={handleSearch}
           className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-800"
         />
+        <select
+          className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-800"
+          onChange={(e) => setFilterPriority(e.target.value)}
+        >
+          <option value="">All</option>
+          <option value="HIGH">High</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="LOW">Low</option>
+        </select>
+        </div>
         <ul className="space-y-3 p-4">
           {currentTodos.length === 0 ? (
             <p className="text-gray-500 text-center">
@@ -161,7 +187,10 @@ const TodoList = () => {
                   <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset mr-5">
                     {todo.priority}
                   </span>
-                  <button className="text-red-500 hover:text-red-700 transition text-md cursor-pointer hover:scale-110">
+                  <button
+                    onClick={() => deleteTodo(todo.id)}
+                    className="text-red-500 hover:text-red-700 transition text-md cursor-pointer hover:scale-110"
+                  >
                     ❌
                   </button>
                 </div>
@@ -169,7 +198,6 @@ const TodoList = () => {
             ))
           )}
         </ul>
-
         {/* Pagination Controls */}
         {totalPages > 1 && (
           <div className="flex justify-center items-center gap-4 mt-10">
