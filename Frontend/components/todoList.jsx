@@ -132,6 +132,44 @@ const TodoList = () => {
     };
   };
 
+
+  //SELECT ALL CHECKBOXES AND DELETE SELECTED TODOS
+  const [selectedTodos, setSelectedTodos] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelectedTodos([]);
+    } else {
+      setSelectedTodos(todos.map((todo) => todo.id));
+    }
+    setSelectAll(!selectAll);
+  };
+
+  const handleCheckboxChange = (id) => {
+    setSelectedTodos((prev) =>
+      prev.includes(id) ? prev.filter((todoId) => todoId !== id) : [...prev, id]
+    );
+  };
+
+  const deleteSelectedTodos = async () => {
+    if (selectedTodos.length === 0) return;
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/todos/deleteAll`, {
+        data: { ids: selectedTodos },
+      });
+      setTodos((prev) =>
+        prev.filter((todo) => !selectedTodos.includes(todo.id))
+      );
+      setSelectedTodos([]);
+      setSelectAll(false);
+      toast.success("All todos deleted successfully");
+      fetchTodos();
+    } catch (error) {
+      console.error("Error deleting todos:", error);
+    }
+  };
+
   return (
     <div className="p-6 w-[50%] mx-auto bg-white shadow-xl rounded-lg mt-10 border border-b-2 border-gray-900">
       <h1 className="text-3xl font-bold text-black mb-6 text-center border-b-2 border-gray-200 pb-2">
@@ -151,10 +189,10 @@ const TodoList = () => {
         <select
           className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-800"
           required
-          // value={priority}
+          value={priority}
           onChange={(e) => setPriority(e.target.value)}
         >
-          <option value="" selected disabled>
+          <option value=""  disabled>
             Select Priority
           </option>
           <option value="HIGH">High</option>
@@ -215,6 +253,8 @@ const TodoList = () => {
               <input
                 type="checkbox"
                 className="form-checkbox h-5 w-5 text-blue-800"
+                checked={selectAll}
+                onChange={handleSelectAll}
               />
             </th>
             <th className="py-3 px-6 text-left">Title</th>
@@ -238,9 +278,9 @@ const TodoList = () => {
                 <td className="py-3 px-6">
                   <input
                     type="checkbox"
-                    checked={todo.completed}
-                    onChange={() => toggleTodo(todo.id, todo.completed)}
                     className="form-checkbox h-5 w-5 text-blue-800"
+                    checked={selectedTodos.includes(todo.id)}
+                    onChange={() => handleCheckboxChange(todo.id)}
                   />
                 </td>
                 <td className="py-3 px-6">{todo.title}</td>
@@ -262,7 +302,14 @@ const TodoList = () => {
           )}
         </tbody>
       </table>
-
+      {currentTodos.length > 0 && (
+        <button
+          onClick={deleteSelectedTodos}
+          className="border border-b-2 border-red-500 px-4 py-1.5 text-red-500 hover:bg-red-500 hover:text-white transition font-medium"
+        >
+          Delete Selected
+        </button>
+      )}
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-4 mt-10">

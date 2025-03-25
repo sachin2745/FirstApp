@@ -26,8 +26,6 @@ const getAllTodos = async (req, res) => {
   }
 };
 
-
-
 const addTodo = async (req, res) => {
   try {
     const { title, priority } = req.body;
@@ -85,6 +83,22 @@ const deleteTodo = async (req, res) => {
   }
 };
 
+const deleteAllTodos = async (req, res) => {
+  const { ids } = req.body;
+  try {
+    await prisma.todo.deleteMany({
+      where: { id: { in: ids } },
+    });
+    res.json({ message: "Todos deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Error deleting todos" });
+  }
+};
 
-
-module.exports = { getAllTodos, addTodo, updateTodo, deleteTodo }; // Corrected export for CommonJS
+module.exports = {
+  getAllTodos,
+  addTodo,
+  updateTodo,
+  deleteTodo,
+  deleteAllTodos,
+}; // Corrected export for CommonJS
