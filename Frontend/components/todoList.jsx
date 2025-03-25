@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 const TodoList = () => {
@@ -6,6 +6,8 @@ const TodoList = () => {
   const [newTodo, setNewTodo] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const todosPerPage = 5;
+  const [searchQuery, setSearchQuery] = useState("");
+  const [priority, setPriority] = useState("MEDIUM");
 
   useEffect(() => {
     fetchTodos();
@@ -26,8 +28,34 @@ const TodoList = () => {
   const indexOfLastTodo = currentPage * todosPerPage;
   const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
   const currentTodos = todos.slice(indexOfFirstTodo, indexOfLastTodo);
-
   const totalPages = Math.ceil(todos.length / todosPerPage);
+
+  //For Searchingg
+ 
+  const fetchTodosSearch = async (query = "") => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/todos/search?query=${query}`
+      );
+      const data = await res.json();
+      setTodos(data);
+      setCurrentPage(1);
+    } catch (error) {
+      console.error("Error fetching todos:", error);
+    }
+  };
+
+  const debounceRef = useRef(null);
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+
+    clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(() => {
+      fetchTodosSearch(value);
+    }, 500);
+  };
 
   const addTodo = async () => {
     //!newTodo.trim() checks if the trimmed string is empty (i.e., if the user entered only spaces or nothing at all).
@@ -35,8 +63,10 @@ const TodoList = () => {
     try {
       await axios.post(`${import.meta.env.VITE_API_URL}/todos/add`, {
         title: newTodo,
+        priority,
       });
       setNewTodo("");
+      setPriority("MEDIUM"); // Reset priority after adding
       fetchTodos();
     } catch (error) {
       console.error("Error adding todo:", error);
@@ -79,6 +109,15 @@ const TodoList = () => {
           required
           type="text"
         />
+        <select
+          className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-800"
+          required
+          onChange={(e) => setPriority(e.target.value)}
+        >
+          <option value="HIGH">High</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="LOW">Low</option>
+        </select>
         <button
           className="bg-blue-800 hover:bg-blue-900  text-white px-10 py-0 rounded transition"
           onClick={addTodo}
@@ -88,8 +127,15 @@ const TodoList = () => {
       </div>
 
       {/* Todo List */}
-      <div className="p-4">
-        <ul className="space-y-3">
+      <div className="">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={handleSearch}
+          className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-800"
+        />
+        <ul className="space-y-3 p-4">
           {currentTodos.length === 0 ? (
             <p className="text-gray-500 text-center">
               No todos found. Start adding some!
@@ -111,12 +157,14 @@ const TodoList = () => {
                     {todo.title}
                   </span>
                 </label>
-                <button
-                  className="text-red-500 hover:text-red-700 transition text-md cursor-pointer hover:scale-110"
-                  onClick={() => deleteTodo(todo.id)}
-                >
-                  ❌
-                </button>
+                <div>
+                  <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset mr-5">
+                    {todo.priority}
+                  </span>
+                  <button className="text-red-500 hover:text-red-700 transition text-md cursor-pointer hover:scale-110">
+                    ❌
+                  </button>
+                </div>
               </li>
             ))
           )}
