@@ -81,11 +81,14 @@ const TodoList = () => {
     }
   };
 
+  //PAGINATION
   const indexOfLastTodo = currentPage * todosPerPage;
   const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
   const currentTodos = todos.slice(indexOfFirstTodo, indexOfLastTodo);
   const totalPages = Math.ceil(todos.length / todosPerPage);
 
+
+  //UPLOAD BULK DATA
   const [file, setFile] = useState(null);
 
   const handleFileChange = (e) => {
