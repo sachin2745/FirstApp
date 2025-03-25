@@ -81,7 +81,6 @@ const TodoList = () => {
         priority,
       });
       setNewTodo("");
-      setPriority("MEDIUM"); // Reset priority after adding
       fetchTodos();
     } catch (error) {
       console.error("Error adding todo:", error);

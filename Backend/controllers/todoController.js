@@ -1,10 +1,12 @@
-const { PrismaClient , Priority  } = require("@prisma/client");
+const { PrismaClient, Priority } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
 const getTodoList = async (req, res) => {
   try {
-    const todos = await prisma.todo.findMany();
+    const todos = await prisma.todo.findMany({
+      orderBy: { id: "desc" },
+    });
     res.json(todos);
   } catch (error) {
     res
