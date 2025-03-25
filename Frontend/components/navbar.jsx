@@ -8,7 +8,7 @@ const Navbar = () => {
       <Link
         to="/"
         className={`px-3 py-2 rounded-md ${
-          location.pathname === "/" ? "bg-blue-500 text-white" : ""
+          location.pathname === "/" ? "border border-b-2 text-blue-500 border-blue-500 font-bold leading-relaxed" : ""
         }`}
       >
         Home
@@ -16,7 +16,7 @@ const Navbar = () => {
       <Link
         to="/todolist"
         className={`px-3 py-2 rounded-md ${
-          location.pathname === "/todolist" ? "bg-blue-500 text-white" : ""
+          location.pathname === "/todolist" ? "border border-b-2 text-blue-500 border-blue-500 font-bold leading-relaxed" : ""
         }`}
       >
         Todo List

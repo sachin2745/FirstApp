@@ -49,13 +49,18 @@ const TodoList = () => {
     }, 500);
   };
 
- 
   useEffect(() => {
     fetchTodos(searchQuery, 1); // Reset to page 1 when filters change
   }, [filterPriority]);
+  const [loading, setLoading] = useState(false);
 
   const addTodo = async () => {
-    if (!newTodo.trim()) return;
+    if (!newTodo.trim()) {
+      toast.warning("Please enter a new task");
+      return;
+    }
+
+    setLoading(true);
     try {
       await axios.post(`${import.meta.env.VITE_API_URL}/todos/add`, {
         title: newTodo,
@@ -65,9 +70,11 @@ const TodoList = () => {
       setTimeout(() => {
         toast.success("Todo added successfully");
       }, 1000);
-       fetchTodos(searchQuery, 1); // Reset to page 1 after adding
+      fetchTodos(searchQuery, 1); // Reset to page 1 after adding
     } catch (error) {
       console.error("Error adding todo:", error);
+    } finally {
+      setLoading(false); // Stop loader
     }
   };
 
@@ -84,7 +91,6 @@ const TodoList = () => {
     }
   };
 
- 
   //UPLOAD BULK DATA
   const [file, setFile] = useState(null);
 
@@ -182,12 +188,14 @@ const TodoList = () => {
           placeholder="Add a new task..."
           required
           type="text"
+          disabled={loading}
         />
         <select
           className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-800"
           required
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
+          disabled={loading}
         >
           <option value="" disabled>
             Select Priority
@@ -197,10 +205,15 @@ const TodoList = () => {
           <option value="LOW">Low</option>
         </select>
         <button
-          className="bg-blue-800 font-medium hover:bg-blue-900 text-white px-10 py-0 rounded cursor-pointer transition"
+          className="border-blue-800 border border-b-2  font-medium hover:bg-blue-900 text-blue-800 hover:text-white px-10 py-0 rounded cursor-pointer transition"
           onClick={addTodo}
+          disabled={loading}
         >
-          ADD
+          {loading ? (
+            <span className="animate-spin border-2 border-blue-800 rounded-full w-7 h-4 mr-2"></span>
+          ) : (
+            "ADD"
+          )}
         </button>
       </div>
       <div className="p-4 border rounded-md shadow-md w-full border-b-2 mx-auto my-10">
@@ -214,7 +227,7 @@ const TodoList = () => {
           />
           <button
             onClick={handleUpload}
-            className="bg-blue-800 text-white t px-4 py-2 font-medium rounded hover:bg-blue-900 cursor-pointer transition"
+            className="border-blue-800 border border-b-2 text-blue-800 px-4 py-2 font-medium rounded hover:bg-blue-900 hover:text-white cursor-pointer transition"
           >
             UPLOAD
           </button>
@@ -280,6 +293,7 @@ const TodoList = () => {
                     onChange={() => handleCheckboxChange(todo.id)}
                   />
                 </td>
+
                 <td className="py-3 px-6">{todo.title}</td>
                 <td className="py-3 px-6">
                   <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20">
@@ -309,42 +323,42 @@ const TodoList = () => {
       )}
       {/* Pagination */}
       {totalPages > 1 && (
-  <div className="flex justify-center items-center gap-4 mt-10">
-    <button
-      onClick={() => {
-        const newPage = Math.max(currentPage - 1, 1);
-        setCurrentPage(newPage);
-        fetchTodos(searchQuery, newPage);
-      }}
-      disabled={currentPage === 1}
-      className={`px-4 py-1.5 border rounded ${
-        currentPage === 1
-          ? "opacity-50 cursor-not-allowed"
-          : "hover:bg-gray-200"
-      }`}
-    >
-      Previous
-    </button>
-    <span className="text-sm font-medium">
-      Page {currentPage} of {totalPages} (Total: {totalTodos})
-    </span>
-    <button
-      onClick={() => {
-        const newPage = Math.min(currentPage + 1, totalPages);
-        setCurrentPage(newPage);
-        fetchTodos(searchQuery, newPage);
-      }}
-      disabled={currentPage === totalPages}
-      className={`px-4 py-1.5 border rounded ${
-        currentPage === totalPages
-          ? "opacity-50 cursor-not-allowed"
-          : "hover:bg-gray-200"
-      }`}
-    >
-      Next
-    </button>
-  </div>
-)}
+        <div className="flex justify-center items-center gap-4 mt-10">
+          <button
+            onClick={() => {
+              const newPage = Math.max(currentPage - 1, 1);
+              setCurrentPage(newPage);
+              fetchTodos(searchQuery, newPage);
+            }}
+            disabled={currentPage === 1}
+            className={`px-4 py-1.5 border rounded border-b-2 ${
+              currentPage === 1
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-gray-200"
+            }`}
+          >
+            Previous
+          </button>
+          <span className="text-sm font-medium">
+            Page {currentPage} of {totalPages} (Total: {totalTodos})
+          </span>
+          <button
+            onClick={() => {
+              const newPage = Math.min(currentPage + 1, totalPages);
+              setCurrentPage(newPage);
+              fetchTodos(searchQuery, newPage);
+            }}
+            disabled={currentPage === totalPages}
+            className={`px-4 py-1.5 border rounded border-b-2 ${
+              currentPage === totalPages
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-gray-200"
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
