@@ -110,7 +110,7 @@ const TodoList = () => {
 
   return (
     <div className="p-6 w-[50%] mx-auto bg-white shadow-xl rounded-lg mt-10 border border-gray-200">
-      <h1 className="text-3xl font-bold text-black mb-6 text-center">
+      <h1 className="text-3xl font-bold text-black mb-6 text-center border-b-2 border-gray-200 pb-2">
         Todo List
       </h1>
 
@@ -129,15 +129,16 @@ const TodoList = () => {
           required
           onChange={(e) => setPriority(e.target.value)}
         >
+          <option value="" selected disabled>Select Priority</option>
           <option value="HIGH">High</option>
           <option value="MEDIUM">Medium</option>
           <option value="LOW">Low</option>
         </select>
         <button
-          className="bg-blue-800 hover:bg-blue-900  text-white px-10 py-0 rounded transition"
+          className="bg-blue-800 font-medium hover:bg-blue-900  text-white px-10 py-0 rounded transition"
           onClick={addTodo}
         >
-          Add
+          ADD
         </button>
       </div>
 
