@@ -7,23 +7,32 @@ const TodoList = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const todosPerPage = 5;
   const [searchQuery, setSearchQuery] = useState("");
   const [priority, setPriority] = useState("MEDIUM");
   const [filterPriority, setFilterPriority] = useState("");
+  const [totalTodos, setTotalTodos] = useState(0);
 
   const debounceRef = useRef(null);
 
-  const fetchTodos = async (query) => {
+  const fetchTodos = async (query, page = currentPage) => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/todos/getall`,
         {
-          params: { query, priority: filterPriority },
+          params: {
+            query,
+            priority: filterPriority,
+            page,
+            limit: todosPerPage,
+          },
         }
       );
-      setTodos(response.data);
-      setCurrentPage(1);
+      setTodos(response.data.todos); // Access the todos array from response
+      setTotalPages(response.data.totalPages);
+      setTotalTodos(response.data.totalTodos);
+      setCurrentPage(response.data.currentPage); // Update current page
     } catch (error) {
       console.error("Error fetching todos:", error);
     }
@@ -40,8 +49,9 @@ const TodoList = () => {
     }, 500);
   };
 
+ 
   useEffect(() => {
-    fetchTodos(searchQuery);
+    fetchTodos(searchQuery, 1); // Reset to page 1 when filters change
   }, [filterPriority]);
 
   const addTodo = async () => {
@@ -55,38 +65,26 @@ const TodoList = () => {
       setTimeout(() => {
         toast.success("Todo added successfully");
       }, 1000);
-      fetchTodos();
+       fetchTodos(searchQuery, 1); // Reset to page 1 after adding
     } catch (error) {
       console.error("Error adding todo:", error);
-    }
-  };
-
-  const toggleTodo = async (id, completed) => {
-    try {
-      await axios.put(`${import.meta.env.VITE_API_URL}/todos/update/${id}`, {
-        completed: !completed,
-      });
-      fetchTodos();
-    } catch (error) {
-      console.error("Error toggling todo:", error);
     }
   };
 
   const deleteTodo = async (id) => {
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/todos/delete/${id}`);
-      fetchTodos();
+      if (todos.length === 1 && currentPage > 1) {
+        fetchTodos(searchQuery, currentPage - 1);
+      } else {
+        fetchTodos(searchQuery, currentPage);
+      }
     } catch (error) {
       console.error("Error deleting todo:", error);
     }
   };
 
-  //PAGINATION
-  const indexOfLastTodo = currentPage * todosPerPage;
-  const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
-  const currentTodos = todos.slice(indexOfFirstTodo, indexOfLastTodo);
-  const totalPages = Math.ceil(todos.length / todosPerPage);
-
+ 
   //UPLOAD BULK DATA
   const [file, setFile] = useState(null);
 
@@ -132,7 +130,6 @@ const TodoList = () => {
     };
   };
 
-
   //SELECT ALL CHECKBOXES AND DELETE SELECTED TODOS
   const [selectedTodos, setSelectedTodos] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -164,7 +161,7 @@ const TodoList = () => {
       setSelectedTodos([]);
       setSelectAll(false);
       toast.success("All todos deleted successfully");
-      fetchTodos();
+      fetchTodos(searchQuery, 1);
     } catch (error) {
       console.error("Error deleting todos:", error);
     }
@@ -192,7 +189,7 @@ const TodoList = () => {
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
         >
-          <option value=""  disabled>
+          <option value="" disabled>
             Select Priority
           </option>
           <option value="HIGH">High</option>
@@ -263,14 +260,14 @@ const TodoList = () => {
           </tr>
         </thead>
         <tbody>
-          {currentTodos.length === 0 ? (
+          {todos.length === 0 ? (
             <tr>
               <td colSpan="4" className="text-gray-500 text-center py-4">
                 No todos found. Start adding some!
               </td>
             </tr>
           ) : (
-            currentTodos.map((todo) => (
+            todos.map((todo) => (
               <tr
                 key={todo.id}
                 className="border-b hover:bg-gray-50 transition"
@@ -302,7 +299,7 @@ const TodoList = () => {
           )}
         </tbody>
       </table>
-      {currentTodos.length > 0 && (
+      {todos.length > 0 && (
         <button
           onClick={deleteSelectedTodos}
           className="border border-b-2 border-red-500 px-4 py-1.5 text-red-500 hover:bg-red-500 hover:text-white transition font-medium"
@@ -312,36 +309,42 @@ const TodoList = () => {
       )}
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-4 mt-10">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className={`px-4 py-1.5 border rounded ${
-              currentPage === 1
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-gray-200"
-            }`}
-          >
-            Previous
-          </button>
-          <span className="text-sm font-medium">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className={`px-4 py-1.5 border rounded ${
-              currentPage === totalPages
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-gray-200"
-            }`}
-          >
-            Next
-          </button>
-        </div>
-      )}
+  <div className="flex justify-center items-center gap-4 mt-10">
+    <button
+      onClick={() => {
+        const newPage = Math.max(currentPage - 1, 1);
+        setCurrentPage(newPage);
+        fetchTodos(searchQuery, newPage);
+      }}
+      disabled={currentPage === 1}
+      className={`px-4 py-1.5 border rounded ${
+        currentPage === 1
+          ? "opacity-50 cursor-not-allowed"
+          : "hover:bg-gray-200"
+      }`}
+    >
+      Previous
+    </button>
+    <span className="text-sm font-medium">
+      Page {currentPage} of {totalPages} (Total: {totalTodos})
+    </span>
+    <button
+      onClick={() => {
+        const newPage = Math.min(currentPage + 1, totalPages);
+        setCurrentPage(newPage);
+        fetchTodos(searchQuery, newPage);
+      }}
+      disabled={currentPage === totalPages}
+      className={`px-4 py-1.5 border rounded ${
+        currentPage === totalPages
+          ? "opacity-50 cursor-not-allowed"
+          : "hover:bg-gray-200"
+      }`}
+    >
+      Next
+    </button>
+  </div>
+)}
     </div>
   );
 };

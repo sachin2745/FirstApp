@@ -4,7 +4,10 @@ const prisma = new PrismaClient();
 
 const getAllTodos = async (req, res) => {
   try {
-    const { query, priority } = req.query;
+    const { query, priority, page = 1, limit = 5 } = req.query;
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+    const skip = (pageNumber - 1) * limitNumber;
 
     const whereClause = {
       AND: [
@@ -13,16 +16,32 @@ const getAllTodos = async (req, res) => {
       ],
     };
 
+    // Get paginated todos
     const todos = await prisma.todo.findMany({
       where: whereClause,
       orderBy: { id: "desc" },
+      skip: skip,
+      take: limitNumber,
     });
 
-    res.json(todos);
+    // Get total count of todos matching the filters
+    const totalTodos = await prisma.todo.count({
+      where: whereClause,
+    });
+
+    const totalPages = Math.ceil(totalTodos / limitNumber);
+
+    res.json({
+      todos,
+      totalPages,
+      totalTodos,
+      currentPage: pageNumber,
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Failed to fetch todos", details: error.message });
+    res.status(500).json({
+      error: "Failed to fetch todos",
+      details: error.message,
+    });
   }
 };
 
@@ -35,7 +54,7 @@ const addTodo = async (req, res) => {
     if (!priority || !["HIGH", "MEDIUM", "LOW"].includes(priority)) {
       return res.status(400).json({ error: "Invalid priority value" });
     }
-    console.log(title, priority);
+    // console.log(title, priority);
 
     const newTodo = await prisma.todo.create({
       data: {
