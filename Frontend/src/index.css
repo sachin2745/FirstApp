@@ -5,3 +5,8 @@
 body {
   font-family: "Montserrat", sans-serif;
 }
+
+@theme {
+  --color-midnight: #121063;
+ 
+}
