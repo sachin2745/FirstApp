@@ -21,6 +21,14 @@ const Navbar = () => {
       >
         Todo List
       </Link>
+      <Link
+        to="/store"
+        className={`px-3 py-2 rounded-md ${
+          location.pathname === "/store" ? "border border-b-2 text-(--color-midnight) border-(--color-midnight) font-bold leading-relaxed" : ""
+        }`}
+      >
+        Store
+      </Link>
     </nav>
   );
 };

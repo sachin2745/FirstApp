@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import TodoList from "../components/todoList";
 import Navbar from "../components/navbar";
+import Store from "../components/store";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
             }
           />
           <Route path="/todolist" element={<TodoList />} />
+          <Route path="/store" element={<Store />} />
         </Routes>
       </div>
     </div>

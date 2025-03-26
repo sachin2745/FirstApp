@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
+//TODO LIST
 model Todo {
   id        String   @unique @default(uuid())
   title     String
@@ -26,4 +26,49 @@ enum Priority {
   HIGH
   MEDIUM
   LOW
+}
+
+//PRODUCT LIST
+model Product {
+  id          String           @id @default(uuid())
+  name        String
+  description String?
+  category    String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  variants    ProductVariant[]
+}
+
+model ProductVariant {
+  id        String   @id @default(uuid())
+  productId String
+  color     String // Different colors
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sizes   ProductSize[]
+  images  ProductImage[]
+}
+
+model ProductSize {
+  id        String   @id @default(uuid())
+  variantId String
+  size      String // e.g., S, M, L, XL
+  price     Decimal // Different price per size
+  stock     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  variant ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+}
+
+model ProductImage {
+  id        String   @id @default(uuid())
+  variantId String
+  imageUrl  String // Image URL or file path
+  altText   String? // Alternative text for SEO
+  createdAt DateTime @default(now())
+
+  variant ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
 }

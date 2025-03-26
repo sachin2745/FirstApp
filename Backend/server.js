@@ -10,6 +10,7 @@ const prisma = new PrismaClient();
 
 // Import routes
 const todoRoutes = require("./routes/todoRoutes");
+const storeRoutes = require("./routes/storeRoutes");
 
 // Middleware setup
 app.use(express.json()); // Parses incoming JSON requests
@@ -18,6 +19,7 @@ app.use(cors()); // Enables CORS for handling cross-origin requests
 
 // Define routes
 app.use("/todos", todoRoutes); // Mount todo routes under the `/todos` path
+app.use("/store", storeRoutes); 
 
 // Default route (health check)
 app.get("/", (req, res) => {
