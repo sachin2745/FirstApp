@@ -108,6 +108,5 @@ const updateVariant = async (req, res) => {
 module.exports = {
   createNewProduct,
   getAllProducts,
-  getProductById,
-  
+  getProductById,  
 };

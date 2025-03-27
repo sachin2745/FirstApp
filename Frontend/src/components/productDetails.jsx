@@ -199,17 +199,17 @@ const ProductDetail = () => {
                       }`}
                     >
                       <Link to={`/store/${variant.slug}`}>
-                      <img
-                        src={
-                          variant.images?.[0]?.imageUrl
-                            ? `${import.meta.env.VITE_API_URL}${
-                                variant.images[0].imageUrl
-                              }`
-                            : "https://via.placeholder.com/150"
-                        }
-                        alt={variant.images?.[0]?.altText || variant.color}
-                        className="w-24 h-24 object-cover rounded"
-                      />
+                        <img
+                          src={
+                            variant.images?.[0]?.imageUrl
+                              ? `${import.meta.env.VITE_API_URL}${
+                                  variant.images[0].imageUrl
+                                }`
+                              : "https://via.placeholder.com/150"
+                          }
+                          alt={variant.images?.[0]?.altText || variant.color}
+                          className="w-24 h-24 object-cover rounded"
+                        />
                       </Link>
                     </button>
                   ))}
@@ -267,9 +267,23 @@ const ProductDetail = () => {
                     d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
                   />
                 </svg>
-                <span className="text-sm">
+                <span className="text-sm font-medium">
                   Available Stock:{" "}
-                  {selectedSize ? selectedSize.stock : "Select a size"}
+                  {selectedSize ? (
+                    <span
+                      className={
+                        selectedSize.stock > 5
+                          ? "text-green-600"
+                          : "text-red-600 font-semibold"
+                      }
+                    >
+                      {selectedSize.stock > 5
+                        ? "In Stock - Order Now!"
+                        : `Hurry Up! Only ${selectedSize.stock} left`}
+                    </span>
+                  ) : (
+                    "Please select a size to check availability"
+                  )}
                 </span>
               </div>
 
