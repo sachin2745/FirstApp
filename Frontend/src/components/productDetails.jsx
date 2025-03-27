@@ -3,32 +3,71 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
 const ProductDetail = () => {
-  const { id } = useParams(); // Get ID from URL
+  const { id: variantId } = useParams(); // Get variant ID from URL
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // State for selected options
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedImage, setSelectedImage] = useState("");
+
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/store/products/getById/${id}`)
+      .get(
+        `${import.meta.env.VITE_API_URL}/store/products/getById/${variantId}`
+      )
       .then((response) => {
         setProduct(response.data);
-        console.log("Fetched Product Details:", response.data); // Debugging line to check fetched data
+        console.log("Fetched Product:", response.data); // Debugging line to check fetched data
+
+        // Set initial selected variant based on URL variantId
+        const initialVariant =
+          response.data.product.variants.find((v) => v.id === variantId) ||
+          response.data.product.variants[0];
+
+        setSelectedVariant(initialVariant);
+
+        // console.log("Initial Variant:", initialVariant); // Debugging line to check initial variant
+
+        // Set initial selected size (first available size)
+        if (initialVariant.sizes.length > 0) {
+          setSelectedSize(initialVariant.sizes[0]);
+        }
+
+        // Set initial image
+        if (initialVariant.images?.length > 0) {
+          setSelectedImage(
+            `${import.meta.env.VITE_API_URL}${
+              initialVariant.images[0].imageUrl
+            }`
+          );
+        }
 
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [id]);
+  }, [variantId]);
 
-  const [selectedImage, setSelectedImage] = useState("");
+  // Handle variant (color) change
+  const handleVariantChange = (variant) => {
+    setSelectedVariant(variant);
 
-  // Set default image when product images are available
-  useEffect(() => {
-    if (product?.images?.length > 0) {
+    // Reset size selection when changing color
+    setSelectedSize(variant.sizes[0] || null);
+
+    // Update main image to first image of the new variant
+    if (variant.images?.length > 0) {
       setSelectedImage(
-        `${import.meta.env.VITE_API_URL}${product.images[0].imageUrl}`
+        `${import.meta.env.VITE_API_URL}${variant.images[0].imageUrl}`
       );
     }
-  }, [product]);
+  };
+
+  // Handle size change
+  const handleSizeChange = (size) => {
+    setSelectedSize(size);
+  };
 
   if (loading) return <div className="text-center mt-10">Loading...</div>;
   if (!product)
@@ -36,20 +75,28 @@ const ProductDetail = () => {
       <div className="text-center mt-10 text-red-500">Product not found.</div>
     );
 
+  // Get unique sizes across all variants
+  const allSizes = [
+    ...new Map(
+      product?.product?.variants
+        ?.flatMap((variant) => variant.sizes)
+        .map((size) => [size.size, size])
+    ).values(),
+  ];
+
   return (
     <>
-   
       <div className="bg-white py-6 sm:py-8 lg:py-12">
-        <div className="mx-auto max-w-screen-xl px-4 md:px-8">
+        <div className="mx-auto max-w-screen-2xl px-4 md:mx-20">
           <div className="grid gap-8 md:grid-cols-2">
             {/* images - start */}
-            <div className="grid gap-4 lg:grid-cols-5">
+            <div className="grid gap-4 lg:grid-cols-6">
               {/* Thumbnails */}
               <div className="order-last flex gap-4 lg:order-none lg:flex-col">
-                {product?.images?.map((image) => (
+                {selectedVariant?.images?.map((image) => (
                   <div
                     key={image.id}
-                    className="overflow-hidden rounded-lg bg-gray-100 cursor-pointer"
+                    className="overflow-hidden rounded-lg  bg-gray-100 cursor-pointer"
                     onClick={() =>
                       setSelectedImage(
                         image.imageUrl
@@ -73,12 +120,12 @@ const ProductDetail = () => {
               </div>
 
               {/* Main Image */}
-              <div className="relative overflow-hidden rounded-lg bg-gray-100 lg:col-span-4">
+              <div className="relative overflow-hidden rounded-lg bg-gray-100 lg:col-span-5">
                 <img
                   src={selectedImage}
                   loading="lazy"
                   alt="Selected Product Image"
-                  className="h-full w-full object-cover object-center"
+                  className="h-full w-full  object-center"
                 />
                 <span className="absolute left-0 top-0 rounded-br-lg bg-red-500 px-3 py-1.5 text-sm uppercase tracking-wider text-white">
                   Sale
@@ -104,7 +151,7 @@ const ProductDetail = () => {
                 </a>
               </div>
             </div>
-            {/* images - end */}
+
             {/* content - start */}
             <div className="md:py-8">
               {/* name - start */}
@@ -141,21 +188,30 @@ const ProductDetail = () => {
                   Color
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  {product?.product?.variants?.map((image) => (
-                    <Link to={`/store/${image.id}`} className="mt-4 flex gap-2">
+                  {product?.product?.variants?.map((variant) => (
+                    <button
+                      key={variant.id}
+                      onClick={() => handleVariantChange(variant)}
+                      className={`mt-4 flex gap-2 p-1 rounded-md ${
+                        selectedVariant?.id === variant.id
+                          ? "ring-2 ring-indigo-500"
+                          : ""
+                      }`}
+                    >
+                      <Link to={`/store/${variant.id}`}>
                       <img
-                        key={image.id}
                         src={
-                          image.images?.[0]?.imageUrl
+                          variant.images?.[0]?.imageUrl
                             ? `${import.meta.env.VITE_API_URL}${
-                                image.images[0].imageUrl
+                                variant.images[0].imageUrl
                               }`
                             : "https://via.placeholder.com/150"
                         }
-                        alt={image.images[0].altText} // Fix: Use `image.altText` instead of `product.name`
+                        alt={variant.images?.[0]?.altText || variant.color}
                         className="w-24 h-24 object-cover rounded"
                       />
-                    </Link>
+                      </Link>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -166,11 +222,16 @@ const ProductDetail = () => {
                   Size
                 </span>
                 <div className="flex flex-wrap gap-3">
-                  {product.sizes.map((size) => (
+                  {selectedVariant?.sizes?.map((size) => (
                     <button
                       key={size.id}
                       type="button"
-                      className="flex h-8 w-12 items-center justify-center rounded-md border bg-white text-center text-sm font-semibold text-gray-800 transition duration-100 hover:bg-gray-100 active:bg-gray-200"
+                      onClick={() => handleSizeChange(size)}
+                      className={`flex h-8 w-12 items-center justify-center rounded-md border text-center text-sm font-semibold transition duration-100 ${
+                        selectedSize?.id === size.id
+                          ? "bg-indigo-500 text-white border-indigo-500"
+                          : "bg-white text-gray-800 hover:bg-gray-100"
+                      }`}
                     >
                       {size.size}
                     </button>
@@ -182,10 +243,7 @@ const ProductDetail = () => {
               <div className="mb-4">
                 <div className="flex items-end gap-2">
                   <span className="text-xl font-bold text-gray-800 md:text-2xl">
-                    $15.00
-                  </span>
-                  <span className="mb-0.5 text-red-500 line-through">
-                    $30.00
+                    {selectedSize ? `₹${selectedSize.price}` : "Select a size"}
                   </span>
                 </div>
                 <span className="text-sm text-gray-500">
@@ -209,22 +267,33 @@ const ProductDetail = () => {
                     d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
                   />
                 </svg>
-                <span className="text-sm">2-4 day shipping</span>
+                <span className="text-sm">
+                  Available Stock:{" "}
+                  {selectedSize ? selectedSize.stock : "Select a size"}
+                </span>
               </div>
 
               <div className="flex gap-2.5">
-                <a
-                  href="#"
-                  className="inline-block flex-1 rounded-lg bg-indigo-500 px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition duration-100 hover:bg-indigo-600 focus-visible:ring active:bg-indigo-700 sm:flex-none md:text-base"
+                <button
+                  disabled={!selectedSize}
+                  className={`inline-block flex-1 rounded-lg px-8 py-3 text-center text-sm font-semibold text-white outline-none ring-indigo-300 transition duration-100 focus-visible:ring md:text-base ${
+                    selectedSize
+                      ? "bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700"
+                      : "bg-gray-400 cursor-not-allowed"
+                  }`}
                 >
-                  Add to cart
-                </a>
-                <a
-                  href="#"
-                  className="inline-block rounded-lg bg-gray-200 px-8 py-3 text-center text-sm font-semibold text-gray-500 outline-none ring-indigo-300 transition duration-100 hover:bg-gray-300 focus-visible:ring active:text-gray-700 md:text-base"
+                  {selectedSize ? "Add to cart" : "Select a size"}
+                </button>
+                <button
+                  disabled={!selectedSize}
+                  className={`inline-block rounded-lg px-8 py-3 text-center text-sm font-semibold outline-none ring-indigo-300 transition duration-100 focus-visible:ring md:text-base ${
+                    selectedSize
+                      ? "bg-gray-200 text-gray-500 hover:bg-gray-300 active:text-gray-700"
+                      : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  }`}
                 >
                   Buy now
-                </a>
+                </button>
               </div>
             </div>
           </div>
