@@ -59,6 +59,14 @@ const Store = () => {
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold text-center mb-6">Product Listing</h1>
       <div className="text-right mb-4">
+        <button className="hover:scale-110 transition duration-300 ease-in-out mr-5">
+          <Link
+            to="/add-bulk-product"
+            className="border border-b-2 border-(--color-midnight) text-(--color-midnight) px-4 py-2 rounded "
+          >
+            Add Bluk Product
+          </Link>
+        </button>
         <button className="hover:scale-110 transition duration-300 ease-in-out">
           <Link
             to="/add-product"

@@ -6,6 +6,7 @@ import ProductDetail from "./components/productDetails";
 import ProductForm from "./components/addProduct";
 import TodoList from "./components/todoList";
 import Test from "./components/test";
+import BulkUpload from "./components/addBlukProduct";
 
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
           <Route path="/test" element={<Test />} />
           <Route path="/store/:id" element={<ProductDetail />} /> 
           <Route path="/add-product" element={<ProductForm />} /> 
+          <Route path="/add-bulk-product" element={<BulkUpload />} /> 
         </Routes>
       </div>
     </div>
