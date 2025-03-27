@@ -5,6 +5,7 @@ import Store from "./components/store";
 import ProductDetail from "./components/productDetails";
 import ProductForm from "./components/addProduct";
 import TodoList from "./components/todoList";
+import Test from "./components/test";
 
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
           />
           <Route path="/todolist" element={<TodoList />} />
           <Route path="/store" element={<Store />} />
+          <Route path="/test" element={<Test />} />
           <Route path="/store/:id" element={<ProductDetail />} /> 
           <Route path="/add-product" element={<ProductForm />} /> 
         </Routes>

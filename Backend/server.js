@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 // Serve static files from the public directory
-app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "static/uploads")));
 
 
 // Define the port from environment variables or use default
