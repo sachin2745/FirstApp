@@ -5,8 +5,7 @@ const fs = require("fs");
 const {
   createNewProduct,
   getAllProducts,
-  getProductById,
-  createBulkProduct,
+  getProductById,  
 } = require("../controllers/storeController");
 
 const router = express.Router();
@@ -79,7 +78,6 @@ const handleUploadErrors = (err, req, res, next) => {
 
 // Routes
 router.post("/products/add", multiUpload, handleUploadErrors, createNewProduct);
-router.post("/products/bulk-upload",  createBulkProduct);
 router.get("/products/getall", getAllProducts);
 router.get("/products/getById/:id", getProductById);
 

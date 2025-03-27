@@ -64,64 +64,6 @@ const createNewProduct = async (req, res) => {
   }
 };
 
-const createBulkProduct = async (req, res) => {
-  try {
-    const { products } = req.body;
-
-    // Log the incoming data
-    console.log("Incoming Products Data:", JSON.stringify(products, null, 2));
-
-    if (!products || !Array.isArray(products)) {
-      return res.status(400).json({ error: "Products array is required" });
-    }
-
-    const results = await Promise.allSettled(
-      products.map(async (product) => {
-        try {
-          if (!product.variants || !Array.isArray(product.variants)) {
-            throw new Error(`Product '${product.name}' is missing 'variants' array`);
-          }
-
-          product.variants.forEach((variant, index) => {
-            if (!variant.sizes || !Array.isArray(variant.sizes)) {
-              throw new Error(
-                `Variant #${index} of product '${product.name}' is missing 'sizes' array`
-              );
-            }
-          });
-
-          return await storeService.createProduct(product);
-        } catch (err) {
-          return Promise.reject({
-            error: err.message || "Unknown error occurred",
-            product,
-          });
-        }
-      })
-    );
-
-    const successfulProducts = results
-      .filter((r) => r.status === "fulfilled")
-      .map((r) => r.value);
-
-    const failedProducts = results
-      .filter((r) => r.status === "rejected")
-      .map((r) => r.reason);
-
-    res.json({
-      success: failedProducts.length === 0,
-      createdCount: successfulProducts.length,
-      products: successfulProducts,
-      failed: failedProducts,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-
-
-
 
 // Controller to fetch all products
 const getAllProducts = async (req, res) => {
@@ -167,5 +109,5 @@ module.exports = {
   createNewProduct,
   getAllProducts,
   getProductById,
-  createBulkProduct,
+  
 };

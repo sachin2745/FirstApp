@@ -2,7 +2,6 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 
-
 const createProduct = async (name, description, category, variants) => {
   return await prisma.product.create({
     data: {
@@ -46,7 +45,6 @@ const createProduct = async (name, description, category, variants) => {
     },
   });
 };
-
 
 // Fetch all products with variants, sizes, and images
 const fetchAllProducts = async () => {
