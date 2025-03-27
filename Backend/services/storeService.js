@@ -40,12 +40,28 @@ const createProduct = async (name, description, category, variants) => {
 
 // Fetch all products with variants, sizes, and images
 const fetchAllProducts = async () => {
-  return await prisma.product.findMany({
+  return await prisma.productVariant.findMany({
     include: {
-      variants: {
-        include: {
-          sizes: true,
-          images: true,
+      product: {
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          category: true,
+        },
+      },
+      sizes: {
+        select: {
+          id: true,
+          price: true,
+          size: true,
+        },
+      },
+      images: {
+        select: {
+          id: true,
+          imageUrl: true,
+          altText: true,
         },
       },
     },
@@ -54,15 +70,21 @@ const fetchAllProducts = async () => {
 
 // Fetch product details by ID
 const fetchProductById = async (id) => {
-  return await prisma.product.findUnique({
+  return await prisma.productVariant.findUnique({
     where: { id: id },
     include: {
-      variants: {
+      product: {
         include: {
-          sizes: true,
-          images: true,
+          variants: {
+            include: {
+              sizes: true,
+              images: true,
+            },
+          },
         },
       },
+      sizes: true,
+      images: true,
     },
   });
 };
