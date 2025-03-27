@@ -3,6 +3,8 @@ const express = require("express"); // Express framework for creating the server
 const { PrismaClient } = require("@prisma/client"); // ORM for database operations
 require("dotenv").config(); // Loads environment variables from .env file
 const cors = require("cors"); // Middleware for handling Cross-Origin Resource Sharing (CORS)
+const path = require('path');
+
 
 // Initialize Express app and Prisma client
 const app = express();
@@ -25,6 +27,10 @@ app.use("/store", storeRoutes);
 app.get("/", (req, res) => {
   res.status(200).send("Hello, World! Server is running.");
 });
+
+// Serve static files from the public directory
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+
 
 // Define the port from environment variables or use default
 const PORT = process.env.PORT || 5005;

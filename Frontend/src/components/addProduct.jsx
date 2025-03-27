@@ -28,9 +28,7 @@ const ProductForm = () => {
           images: Yup.array()
             .of(
               Yup.object().shape({
-                imageUrl: Yup.string()
-                  .required("Image URL is required")
-                  .url("Must be a valid URL"),
+                imageUrl: Yup.string().required("Image field is required"),
                 altText: Yup.string(),
               })
             )
@@ -56,10 +54,38 @@ const ProductForm = () => {
     validationSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
+        const formData = new FormData();
+
+        // Append all text fields
+        formData.append("name", values.name);
+        formData.append("description", values.description);
+        formData.append("category", values.category);
+        formData.append("variants", JSON.stringify(values.variants));
+
+        // Append main image if exists
+        if (values.mainImage) {
+          formData.append("mainImage", values.mainImage);
+        }
+
+        // Append variant images
+        values.variants.forEach((variant, variantIndex) => {
+          variant.images.forEach((image, imageIndex) => {
+            if (image.imageFile) {
+              formData.append(`variantImages`, image.imageFile);
+            }
+          });
+        });
+
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL}/store/products/add`,
-          values
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
         );
+
         console.log("Product created:", response.data);
         alert("Product created successfully!");
         resetForm();
@@ -69,6 +95,21 @@ const ProductForm = () => {
       }
     },
   });
+
+  // Add this function to handle file changes
+  const handleFileChange = (event, variantIndex, imageIndex) => {
+    const file = event.currentTarget.files[0];
+    if (!file) return;
+
+    const variants = [...formik.values.variants];
+    variants[variantIndex].images[imageIndex] = {
+      ...variants[variantIndex].images[imageIndex],
+      imageFile: file,
+      imageUrl: URL.createObjectURL(file), // for preview
+    };
+
+    formik.setFieldValue("variants", variants);
+  };
 
   // Helper functions for dynamic fields
   const addVariant = () => {
@@ -113,7 +154,7 @@ const ProductForm = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md my-10">
       <h1 className="text-2xl font-bold mb-6 text-gray-800">
         Create New Product
       </h1>
@@ -389,36 +430,31 @@ const ProductForm = () => {
                     className="grid grid-cols-2 gap-4 items-end"
                   >
                     <div>
-                      <label
-                        htmlFor={`variants.${variantIndex}.images.${imageIndex}.imageUrl`}
-                        className="block text-xs font-medium text-gray-500"
-                      >
-                        Image URL
+                      <label className="block text-xs font-medium text-gray-500">
+                        Image
                       </label>
                       <input
-                        type="text"
-                        id={`variants.${variantIndex}.images.${imageIndex}.imageUrl`}
-                        name={`variants.${variantIndex}.images.${imageIndex}.imageUrl`}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={image.imageUrl}
-                        placeholder="https://example.com/image.jpg"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          handleFileChange(e, variantIndex, imageIndex)
+                        }
+                        className="mt-1 block w-full text-sm text-gray-500
+                      file:mr-4 file:py-2 file:px-4
+                      file:rounded-md file:border-0
+                      file:text-sm file:font-semibold
+                      file:bg-indigo-50 file:text-indigo-700
+                      hover:file:bg-indigo-100"
                       />
-                      {formik.touched.variants?.[variantIndex]?.images?.[
-                        imageIndex
-                      ]?.imageUrl &&
-                        formik.errors.variants?.[variantIndex]?.images?.[
-                          imageIndex
-                        ]?.imageUrl && (
-                          <div className="text-red-500 text-xs mt-1">
-                            {
-                              formik.errors.variants[variantIndex].images[
-                                imageIndex
-                              ].imageUrl
-                            }
-                          </div>
-                        )}
+                      {image.imageUrl && (
+                        <div className="mt-2">
+                          <img
+                            src={image.imageUrl}
+                            alt="Preview"
+                            className="h-20 w-20 object-cover rounded"
+                          />
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex items-end space-x-2">

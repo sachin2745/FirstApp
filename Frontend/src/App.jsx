@@ -1,10 +1,11 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import TodoList from "../components/todoList";
-import Navbar from "../components/navbar";
-import Store from "../components/store";
-import ProductDetail from "../components/productDetails";
-import ProductForm from "../components/addProduct";
+import Navbar from "./components/Navbar";
+import Store from "./components/store";
+import ProductDetail from "./components/productDetails";
+import ProductForm from "./components/addProduct";
+import TodoList from "./components/todoList";
+
 
 const App = () => {
   return (
