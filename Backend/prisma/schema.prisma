@@ -43,6 +43,7 @@ model ProductVariant {
   id        String   @id @default(uuid())
   productId String
   color     String // Different colors
+  slug      String?   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

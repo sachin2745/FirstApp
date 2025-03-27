@@ -23,7 +23,7 @@ const ProductDetail = () => {
 
         // Set initial selected variant based on URL variantId
         const initialVariant =
-          response.data.product.variants.find((v) => v.id === variantId) ||
+          response.data.product.variants.find((v) => v.slug === variantId) ||
           response.data.product.variants[0];
 
         setSelectedVariant(initialVariant);
@@ -198,7 +198,7 @@ const ProductDetail = () => {
                           : ""
                       }`}
                     >
-                      <Link to={`/store/${variant.id}`}>
+                      <Link to={`/store/${variant.slug}`}>
                       <img
                         src={
                           variant.images?.[0]?.imageUrl

@@ -71,8 +71,8 @@ const Store = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((items) => (
           <div key={items.id} className=" bg-white rounded-lg shadow-lg p-4 ">
-            <Link to={`/store/${items.id}`} className="block w-full">
-              <div className="relative group  w-full overflow-hidden rounded-md">
+            <Link to={`/store/${items.slug}`} className="block w-full">
+              <div className="relative group h-[396px] w-full overflow-hidden rounded-md">
                 <img
                   src={
                     items.images?.[0]?.imageUrl
@@ -88,7 +88,7 @@ const Store = () => {
               </div>
             </Link>
 
-            <Link to={`/store/${items.id}`}>
+            <Link to={`/store/${items.slug}`}>
               <h2 className="text-lg font-semibold cusrsor-pointer pt-5 uppercase">
                 {items.product.name}
               </h2>

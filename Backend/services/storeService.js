@@ -1,30 +1,38 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+
 const createProduct = async (name, description, category, variants) => {
-  console.log("Received Data:", { name, description, category, variants });
   return await prisma.product.create({
     data: {
       name,
       description,
       category,
       variants: {
-        create: variants.map((variant) => ({
-          color: variant.color,
-          sizes: {
-            create: variant.sizes.map((size) => ({
-              size: size.size,
-              price: size.price,
-              stock: size.stock || 0, // Ensuring stock is included
-            })),
-          },
-          images: {
-            create: variant.images.map((image) => ({
-              imageUrl: image.imageUrl,
-              altText: image.altText || "", // Handling optional alt text
-            })),
-          },
-        })),
+        create: variants.map((variant) => {
+          // Find the largest size (or default to the first size)
+          const largestSize = variant.sizes
+            .map((size) => size.size.toLowerCase().replace(/\s+/g, "-"))
+            .sort((a, b) => b.length - a.length)[0]; // Sorting based on length for consistency
+
+          return {
+            color: variant.color,
+            slug: `${name.toLowerCase().replace(/\s+/g, "-")}-${variant.color.toLowerCase().replace(/\s+/g, "-")}-${largestSize}`,
+            sizes: {
+              create: variant.sizes.map((size) => ({
+                size: size.size,
+                price: size.price,
+                stock: size.stock || 0, // Ensuring stock is included
+              })),
+            },
+            images: {
+              create: variant.images.map((image) => ({
+                imageUrl: image.imageUrl,
+                altText: image.altText || "", // Handling optional alt text
+              })),
+            },
+          };
+        }),
       },
     },
     include: {
@@ -37,6 +45,7 @@ const createProduct = async (name, description, category, variants) => {
     },
   });
 };
+
 
 // Fetch all products with variants, sizes, and images
 const fetchAllProducts = async () => {
@@ -71,7 +80,7 @@ const fetchAllProducts = async () => {
 // Fetch product details by ID
 const fetchProductById = async (id) => {
   return await prisma.productVariant.findUnique({
-    where: { id: id },
+    where: { slug: id },
     include: {
       product: {
         include: {
@@ -89,37 +98,11 @@ const fetchProductById = async (id) => {
   });
 };
 
-// Update product variant details
-const updateProductVariant = async (
-  variantId,
-  sizeId,
-  newSizePrice,
-  newColor,
-  newImage
-) => {
-  if (sizeId && newSizePrice) {
-    await prisma.productSize.update({
-      where: { id: parseInt(sizeId) },
-      data: { price: newSizePrice },
-    });
-  }
-  if (newColor) {
-    await prisma.productVariant.update({
-      where: { id: parseInt(variantId) },
-      data: { color: newColor },
-    });
-  }
-  if (newImage) {
-    await prisma.productImage.create({
-      data: { variantId: parseInt(variantId), imageUrl: newImage },
-    });
-  }
-  return { message: "Variant updated successfully" };
-};
+
 
 module.exports = {
   createProduct,
   fetchAllProducts,
   fetchProductById,
-  updateProductVariant,
+  
 };

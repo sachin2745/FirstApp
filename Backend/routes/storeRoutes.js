@@ -50,6 +50,5 @@ const multiUpload = upload.fields([
 router.post("/products/add", multiUpload, createNewProduct);
 router.get("/products/getall", getAllProducts);
 router.get("/products/getById/:id", getProductById);
-router.put("/products/variant/:variantId", updateVariant);
 
 module.exports = router;
