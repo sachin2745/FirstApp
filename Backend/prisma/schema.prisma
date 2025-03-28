@@ -75,16 +75,27 @@ model ProductImage {
   variant ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
 }
 
+model Cart {
+  id        String    @id @default(uuid())
+  sessionId String    @unique // Store this in browser cookies
+  items     CartItem[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
 
 model CartItem {
   id        String   @id @default(uuid())
   cartId    String
   variantId String
-  size      String
+  sizeId    String   // Reference to ProductSize instead of just size string
   quantity  Int      @default(1)
-  price     Decimal  // Price at the time of adding to cart
+  price     Decimal  // Snapshot of price when added to cart
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  
+  cart    Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  variant ProductVariant @relation(fields: [variantId], references: [id])
 }
+
+
 

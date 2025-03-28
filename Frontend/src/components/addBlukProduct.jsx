@@ -108,13 +108,7 @@ const BulkUploadProducts = () => {
               });
             }
 
-            // Add image if available
-            // if (row.imageUrl) {
-            //   variant.images.push({
-            //     imageUrl: row.imageUrl,
-            //     altText: row.altText || `${row.name} ${row.color}`,
-            //   });
-            // }
+          
 
             // Process images if available
             if (row.images) {
