@@ -8,7 +8,7 @@ const Navbar = () => {
       <Link
         to="/"
         className={`px-3 py-2 rounded-md ${
-          location.pathname === "/" ? "border border-b-2 text-(--color-midnight) border-(--color-midnight) font-bold leading-relaxed" : ""
+          location.pathname === "/" ? "border border-b-2 text-primary border-primary font-bold leading-relaxed" : ""
         }`}
       >
         Home
@@ -16,7 +16,7 @@ const Navbar = () => {
       <Link
         to="/todolist"
         className={`px-3 py-2 rounded-md ${
-          location.pathname === "/todolist" ? "border border-b-2 text-(--color-midnight) border-(--color-midnight) font-bold leading-relaxed" : ""
+          location.pathname === "/todolist" ? "border border-b-2 text-primary border-primary font-bold leading-relaxed" : ""
         }`}
       >
         Todo List
@@ -24,7 +24,7 @@ const Navbar = () => {
       <Link
         to="/store"
         className={`px-3 py-2 rounded-md ${
-          location.pathname === "/store" ? "border border-b-2 text-(--color-midnight) border-(--color-midnight) font-bold leading-relaxed" : ""
+          location.pathname === "/store" ? "border border-b-2 text-primary border-primary font-bold leading-relaxed" : ""
         }`}
       >
         Store
