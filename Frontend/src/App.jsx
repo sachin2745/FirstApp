@@ -1,6 +1,5 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
 import Store from "./components/store";
 import ProductDetail from "./components/productDetails";
 import ProductForm from "./components/addProduct";
@@ -8,12 +7,13 @@ import TodoList from "./components/todoList";
 import Test from "./components/test";
 import BulkUpload from "./components/addBlukProduct";
 import CartPage from "./components/cart";
+import { MegaMenuWithHover } from "./components/navbar";
 
 
 const App = () => {
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navbar />
+      <MegaMenuWithHover />
       <div className="container mx-auto">
         <Routes>
           <Route
