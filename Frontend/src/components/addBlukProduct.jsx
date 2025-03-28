@@ -109,11 +109,23 @@ const BulkUploadProducts = () => {
             }
 
             // Add image if available
-            if (row.imageUrl) {
-              variant.images.push({
-                imageUrl: row.imageUrl,
-                altText: row.altText || `${row.name} ${row.color}`,
-              });
+            // if (row.imageUrl) {
+            //   variant.images.push({
+            //     imageUrl: row.imageUrl,
+            //     altText: row.altText || `${row.name} ${row.color}`,
+            //   });
+            // }
+
+            // Process images if available
+            if (row.images) {
+              // Split the images string into an array
+              const imageArray = row.images.split(",").map((img) => img.trim());
+
+              // Convert to the format your system expects
+              variant.images = imageArray.map((img) => ({
+                imageUrl: img,
+                altText: `${row.name} ${row.color} ${index + 1}`,
+              }));
             }
 
             // Check if variant with this color already exists
@@ -184,28 +196,28 @@ const BulkUploadProducts = () => {
       setError("No valid products to upload");
       return;
     }
-  
+
     setUploading(true);
     setError(null);
     setSuccess(false);
-  
+
     try {
       let uploadedCount = 0;
-  
+
       for (let i = 0; i < products.length; i++) {
         const formData = new FormData();
         formData.append("name", products[i].name);
         formData.append("description", products[i].description);
         formData.append("category", products[i].category);
-  
+
         // Append main image
         if (products[i].mainImage) {
           formData.append("mainImage", products[i].mainImage);
         }
-  
+
         // Append variants as JSON string
         formData.append("variants", JSON.stringify(products[i].variants));
-  
+
         // Append variant images
         if (products[i].variants) {
           products[i].variants.forEach((variant, variantIndex) => {
@@ -214,7 +226,7 @@ const BulkUploadProducts = () => {
             });
           });
         }
-  
+
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL}/store/products/add`,
           formData,
@@ -230,16 +242,16 @@ const BulkUploadProducts = () => {
             },
           }
         );
-  
+
         console.log(`Uploaded product ${i + 1}:`, response.data);
         uploadedCount++;
       }
-  
+
       setSuccess(true);
       setProducts([]);
       setFile(null);
       setValidationErrors([]);
-  
+
       toast.success(`Successfully uploaded ${uploadedCount} products`);
     } catch (err) {
       console.error("Upload error:", err);
@@ -247,7 +259,7 @@ const BulkUploadProducts = () => {
         err.response?.data?.error ||
         err.response?.data?.message ||
         "Failed to upload products. Please try again.";
-  
+
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -255,8 +267,6 @@ const BulkUploadProducts = () => {
       setProgress(0);
     }
   };
-  
-  
 
   const handleCancel = () => {
     setFile(null);

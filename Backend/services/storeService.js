@@ -46,6 +46,48 @@ const createProduct = async (name, description, category, variants) => {
   });
 };
 
+const createBulkProduct = async (name, description, category, variants) => {
+  return await prisma.product.create({
+    data: {
+      name,
+      description,
+      category,
+      variants: {
+        create: variants.map((variant) => {
+          // Process images from the comma-separated string to array
+          const images = variant.images.map(img => ({
+            imageUrl: img.imageUrl,
+            altText: img.altText || `${name} ${variant.color}`
+          }));
+
+          return {
+            color: variant.color,
+            slug: `${name.toLowerCase().replace(/\s+/g, "-")}-${variant.color.toLowerCase().replace(/\s+/g, "-")}-${variant.sizes[0].size.toLowerCase().replace(/\s+/g, "-")}`,
+            sizes: {
+              create: variant.sizes.map((size) => ({
+                size: size.size,
+                price: size.price,
+                stock: size.stock || 0,
+              })),
+            },
+            images: {
+              create: images,
+            },
+          };
+        }),
+      },
+    },
+    include: {
+      variants: {
+        include: {
+          sizes: true,
+          images: true,
+        },
+      },
+    },
+  });
+};
+
 // Fetch all products with variants, sizes, and images
 const fetchAllProducts = async () => {
   return await prisma.productVariant.findMany({
@@ -103,5 +145,5 @@ module.exports = {
   createProduct,
   fetchAllProducts,
   fetchProductById,
-  
+  createBulkProduct,
 };
