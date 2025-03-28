@@ -80,8 +80,5 @@ const handleUploadErrors = (err, req, res, next) => {
 router.post("/products/add", multiUpload, handleUploadErrors, createNewProduct);
 router.get("/products/getall", getAllProducts);
 router.get("/products/getById/:id", getProductById);
-// router.get("/cart/getCart",getCart);
-// router.post("/cart/addToCart", addToCart);
-// router.put("/cart/updateCart/:id", updateCart);
-// router.delete("/cart/removeFromCart/:id", removeFromCart);
+
 module.exports = router;

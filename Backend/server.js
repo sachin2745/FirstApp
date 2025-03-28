@@ -4,15 +4,17 @@ const { PrismaClient } = require("@prisma/client"); // ORM for database operatio
 require("dotenv").config(); // Loads environment variables from .env file
 const cors = require("cors"); // Middleware for handling Cross-Origin Resource Sharing (CORS)
 const path = require('path');
-
+const cookieParser = require('cookie-parser');
 
 // Initialize Express app and Prisma client
 const app = express();
 const prisma = new PrismaClient();
+app.use(cookieParser());
 
 // Import routes
 const todoRoutes = require("./routes/todoRoutes");
 const storeRoutes = require("./routes/storeRoutes");
+const cartRoutes = require("./routes/cartRoutes");
 
 // Middleware setup
 app.use(express.json()); // Parses incoming JSON requests
@@ -22,6 +24,7 @@ app.use(cors()); // Enables CORS for handling cross-origin requests
 // Define routes
 app.use("/todos", todoRoutes); // Mount todo routes under the `/todos` path
 app.use("/store", storeRoutes); 
+app.use("/cart", cartRoutes); 
 
 // Default route (health check)
 app.get("/", (req, res) => {
