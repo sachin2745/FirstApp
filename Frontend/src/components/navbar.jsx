@@ -569,7 +569,7 @@ function NavList() {
         className="font-medium text-lg"
       >
         <div className="flex items-center py-3 px-2 gap-2 fontss hover:bg-black hover:text-brown">
-         About
+          About
         </div>
       </Typography>
       <Typography
@@ -591,7 +591,7 @@ function NavList() {
         className="font-medium text-lg "
       >
         <div className="flex items-center py-3 px-2 gap-2 fontss hover:bg-black hover:text-brown ">
-         All Products
+          All Products
         </div>
       </Typography>
     </List>
@@ -619,15 +619,11 @@ export function MegaMenuWithHover() {
         <div className="flex items-center justify-between text-white fontss">
           <Typography
             as="a"
-            href="#"
+            href="/"
             variant="h6"
-            className="mr-4 cursor-pointer py-1.5 lg:ml-2"
+            className="mr-4 cursor-pointer py-1.5 lg:ml-2 font-Montserrat "
           >
-            <img
-              src="/LUX-BY-SANDY-LOGO.webp"
-              alt="Logo"
-              className="w-28 h-auto"
-            />
+            <span className="text-xl font-medium "><span className="font-semibold border-none">E</span>-Commerce</span>
           </Typography>
           <div className="hidden lg:block ">
             <NavList />
