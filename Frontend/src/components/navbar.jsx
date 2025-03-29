@@ -27,8 +27,7 @@ import {
   TagIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/solid";
-
-
+import { Link } from "react-router-dom";
 
 function NavListMenu() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -46,8 +45,9 @@ function NavListMenu() {
         <MenuHandler>
           <Typography as="div" variant="small" className="font-medium">
             <div
-              className="flex items-center fontss gap-2 px-2 py-3 cursor-pointer font-medium text-lg text-white active:bg-black hover:bg-black hover:text-brown"
-              selected={isMenuOpen || isMobileMenuOpen}
+              className={`flex items-center fontss gap-2 px-2 py-3 cursor-pointer font-medium text-lg text-white active:bg-black hover:bg-black hover:text-brown ${
+                isMenuOpen || isMobileMenuOpen ? "selected" : ""
+              }`}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
             >
               Fragnance
@@ -155,7 +155,6 @@ function NavListMenu() {
 function NavListMenu2() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
- 
 
   return (
     <React.Fragment>
@@ -169,8 +168,9 @@ function NavListMenu2() {
         <MenuHandler>
           <Typography as="div" variant="small" className="font-medium">
             <div
-              className="flex items-center fontss gap-2 px-2 py-3 cursor-pointer  font-medium text-lg text-white hover:bg-black hover:text-brown"
-              selected={isMenuOpen || isMobileMenuOpen}
+              className={`flex items-center fontss gap-2 px-2 py-3 cursor-pointer font-medium text-lg text-white active:bg-black hover:bg-black hover:text-brown ${
+                isMenuOpen || isMobileMenuOpen ? "selected" : ""
+              }`}
               onClick={() => setIsMobileMenuOpen((cur) => !cur)}
             >
               Collection
@@ -194,7 +194,9 @@ function NavListMenu2() {
             {/* Left Side - Categories */}
             <div className="flex flex-col border-r border-gray-200">
               <div className="group py-2 text-sm cursor-pointer px-4 hover:bg-blue-100 flex items-center justify-between gap-5 w-56">
-                <h3 className="text-medium  overflow-y-auto overflow-x-hidden cursor-pointer text-black">Mens Top Wear</h3>
+                <h3 className="text-medium  overflow-y-auto overflow-x-hidden cursor-pointer text-black">
+                  Mens Top Wear
+                </h3>
                 <div>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -214,17 +216,39 @@ function NavListMenu2() {
 
                 {/* Right Side - Varieties (shown on hover) */}
                 <div className="absolute overflow-y-auto overflow-x-hidden left-48 top-0 hidden group-hover:block bg-white shadow-xl w-full h-full px-4 ml-[31px]">
-                  <div className="py-2 text-sm text-black font-medium">More in Men's Top Wear</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">All</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Men's T-Shirts</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Men's Formal Shirts</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Men's Casual Shirts</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Men's Kurtas</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Men's Ethnic Sets</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Men's Blazer</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Men's Raincoat</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Jeans</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Trousers</div>
+                  <div className="py-2 text-sm text-black font-medium">
+                    More in Men's Top Wear
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    All
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Men's T-Shirts
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Men's Formal Shirts
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Men's Casual Shirts
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Men's Kurtas
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Men's Ethnic Sets
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Men's Blazer
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Men's Raincoat
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Jeans
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Trousers
+                  </div>
                 </div>
               </div>
 
@@ -248,13 +272,25 @@ function NavListMenu2() {
                 </div>
 
                 <div className="absolute overflow-y-auto overflow-x-hidden cursor-pointer left-48 top-0 hidden group-hover:block bg-white shadow-lg w-full h-full px-4 ml-[31px]">
-                <div className="py-2 text-sm text-black font-medium">More in Mens Footwear</div>
+                  <div className="py-2 text-sm text-black font-medium">
+                    More in Mens Footwear
+                  </div>
 
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Sports Shoes</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Casual Shoes</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Formal Shoes</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Sandals</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Sneakers</div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Sports Shoes
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Casual Shoes
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Formal Shoes
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Sandals
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Sneakers
+                  </div>
                 </div>
               </div>
 
@@ -278,18 +314,32 @@ function NavListMenu2() {
                 </div>
 
                 <div className="absolute overflow-y-auto overflow-x-hidden cursor-pointer left-48 top-0 hidden group-hover:block bg-white shadow-lg w-full h-full px-4 ml-[31px]">
-                <div className="py-2 text-sm text-black font-medium">More in Women Footwear</div>
+                  <div className="py-2 text-sm text-black font-medium">
+                    More in Women Footwear
+                  </div>
 
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Backpacks</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Laptop Bags</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Travel Bags</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Suitcases</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Wallets</div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Backpacks
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Laptop Bags
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Travel Bags
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Suitcases
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Wallets
+                  </div>
                 </div>
               </div>
 
               <div className="group py-2 text-sm cursor-pointer px-4 hover:bg-blue-100 flex items-center justify-between gap-5 w-56">
-                <h3 className="text-medium text-black">Watches & Accessories</h3>
+                <h3 className="text-medium text-black">
+                  Watches & Accessories
+                </h3>
                 <div>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -308,13 +358,27 @@ function NavListMenu2() {
                 </div>
 
                 <div className="absolute overflow-y-auto overflow-x-hidden cursor-pointer left-48 top-0 hidden group-hover:block bg-white shadow-lg w-full h-full px-4 ml-[31px]">
-                <div className="py-2 text-sm text-black font-medium">More in Watches & Accessories</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Mens & Woman Watches</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Mens & Woman Sunglases</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Wallets</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Travel Bags</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Suitcases</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Wallets</div>
+                  <div className="py-2 text-sm text-black font-medium">
+                    More in Watches & Accessories
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Mens & Woman Watches
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Mens & Woman Sunglases
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Wallets
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Travel Bags
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Suitcases
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Wallets
+                  </div>
                 </div>
               </div>
               <div className="group py-2 text-sm cursor-pointer px-4 hover:bg-blue-100 flex items-center justify-between gap-5 w-56">
@@ -337,13 +401,25 @@ function NavListMenu2() {
                 </div>
 
                 <div className="absolute overflow-y-auto overflow-x-hidden cursor-pointer left-48 top-0 hidden group-hover:block bg-white shadow-lg w-full h-full px-4 ml-[31px]">
-                <div className="py-2 text-sm text-black font-medium">More in Women Western</div>
+                  <div className="py-2 text-sm text-black font-medium">
+                    More in Women Western
+                  </div>
 
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Backpacks</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Laptop Bags</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Travel Bags</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Suitcases</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Wallets</div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Backpacks
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Laptop Bags
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Travel Bags
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Suitcases
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Wallets
+                  </div>
                 </div>
               </div>
               <div className="group py-2 text-sm cursor-pointer px-4 hover:bg-blue-100 flex items-center justify-between gap-5 w-56">
@@ -366,13 +442,25 @@ function NavListMenu2() {
                 </div>
 
                 <div className="absolute overflow-y-auto overflow-x-hidden cursor-pointer left-48 top-0 hidden group-hover:block bg-white shadow-lg w-full h-full px-4 ml-[31px]">
-                <div className="py-2 text-sm text-black font-medium">More in Kids</div>
+                  <div className="py-2 text-sm text-black font-medium">
+                    More in Kids
+                  </div>
 
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Backpacks</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Laptop Bags</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Travel Bags</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Suitcases</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Wallets</div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Backpacks
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Laptop Bags
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Travel Bags
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Suitcases
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Wallets
+                  </div>
                 </div>
               </div>
               <div className="group py-2 text-sm cursor-pointer px-4 hover:bg-blue-100 flex items-center justify-between gap-5 w-56">
@@ -395,13 +483,25 @@ function NavListMenu2() {
                 </div>
 
                 <div className="absolute overflow-y-auto overflow-x-hidden cursor-pointer left-48 top-0 hidden group-hover:block bg-white shadow-lg w-full h-full px-4 ml-[31px]">
-                <div className="py-2 text-sm text-black font-medium">More in Essentails</div>
+                  <div className="py-2 text-sm text-black font-medium">
+                    More in Essentails
+                  </div>
 
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Backpacks</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Laptop Bags</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Travel Bags</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Suitcases</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Wallets</div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Backpacks
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Laptop Bags
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Travel Bags
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Suitcases
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Wallets
+                  </div>
                 </div>
               </div>
               <div className="group py-2 text-sm cursor-pointer px-4 hover:bg-blue-100 flex items-center justify-between gap-5 w-56">
@@ -424,13 +524,25 @@ function NavListMenu2() {
                 </div>
 
                 <div className="absolute overflow-y-auto overflow-x-hidden cursor-pointer left-48 top-0 hidden group-hover:block bg-white shadow-lg w-full h-full px-4  ml-[31px]">
-                <div className="py-2 text-sm text-black font-medium">More in Winters</div>
+                  <div className="py-2 text-sm text-black font-medium">
+                    More in Winters
+                  </div>
 
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Backpacks</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Laptop Bags</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Travel Bags</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Suitcases</div>
-                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">Wallets</div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Backpacks
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Laptop Bags
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Travel Bags
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Suitcases
+                  </div>
+                  <div className="py-2 text-sm text-gray-700  hover:text-black hover:font-semibold">
+                    Wallets
+                  </div>
                 </div>
               </div>
             </div>
@@ -447,40 +559,39 @@ function NavListMenu2() {
 function NavList() {
   return (
     <List className="mt-4 mb-6 p-0 lg:mt-0 lg:mb-0 lg:flex-row  lg:p-1 font-Montserrat ">
-      
       <NavListMenu />
       <NavListMenu2 />
       <Typography
         as="a"
-        href="#"
+        href="/"
         variant="small"
         color="white"
         className="font-medium text-lg"
       >
         <div className="flex items-center py-3 px-2 gap-2 fontss hover:bg-black hover:text-brown">
-          About us
+         About
         </div>
       </Typography>
       <Typography
         as="a"
-        href="#"
+        href="/todolist"
         variant="small"
         color="white"
         className="font-medium text-lg"
       >
         <div className="flex items-center py-3 px-2 gap-2 fontss hover:bg-black hover:text-brown">
-          Blogs
+          Todo
         </div>
       </Typography>
       <Typography
         as="a"
-        href="#"
+        href="/store"
         variant="small"
         color="white"
         className="font-medium text-lg "
       >
         <div className="flex items-center py-3 px-2 gap-2 fontss hover:bg-black hover:text-brown ">
-          All Products
+         All Products
         </div>
       </Typography>
     </List>
