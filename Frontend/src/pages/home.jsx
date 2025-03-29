@@ -17,9 +17,9 @@ const Home = () => {
       <ProductCarousel />
       <ShopByCategory />
       <HeroSectionTwo />
-      <ProductsForYou />
-      <ShoesProduct />
       <CardShows />
+      <ShoesProduct />
+      <ProductsForYou />
       <Testimonial />
       <Faq />
       <Footer />
