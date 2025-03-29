@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Swiper from "swiper";
 import "swiper/css";
-import "swiper/css/navigation"; // Import navigation styles
+// import "swiper/css/navigation"; // Import navigation styles
 import { Navigation } from "swiper/modules";
 
 const Testimonial = () => {
