@@ -31,7 +31,7 @@ const ProductsForYou = () => {
 
   return (
     <>
-      <section className="bg-white">
+      <section className="bg-white py-10">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 cursor-pointer ">
           <h2 className="text-2xl font-medium">Products For You</h2>
           <div className="grid grid-cols-1 md:grid-cols-12 md:gap-4 my-5">

@@ -5,7 +5,7 @@ const HeroSection = () => {
   return (
     <>
       <Carousel
-        className="rounded-none py-10"
+        className="rounded-none pb-10"
         autoplay={true}
         autoplayDelay={5000}
         loop={true}

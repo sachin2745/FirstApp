@@ -17,7 +17,7 @@ const ProductCarousel = () => {
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 cursor-pointer">
         <Carousel
           className="rounded-none py-10"
-          autoplay={true}
+        //   autoplay={true}
           autoplayDelay={5000}
           loop={true}
           navigation={({ setActiveIndex, activeIndex, length }) => (
@@ -87,9 +87,9 @@ const ProductCarousel = () => {
                   className="w-full h-auto object-cover"
                 />
               </a>
-              <a href="/product3" className="block">
+              <a href="/product3" className="block bg-[#FAFAFA]">
                 <img
-                  src="/pro3.webp"
+                  src="/ppp.webp"
                   alt="product 3"
                   className="w-full h-auto object-cover"
                 />
