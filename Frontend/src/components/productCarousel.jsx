@@ -17,7 +17,7 @@ const ProductCarousel = () => {
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 cursor-pointer">
         <Carousel
           className="rounded-none py-10"
-        //   autoplay={true}
+          autoplay={true}
           autoplayDelay={5000}
           loop={true}
           navigation={({ setActiveIndex, activeIndex, length }) => (

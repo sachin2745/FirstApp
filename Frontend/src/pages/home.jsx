@@ -8,6 +8,7 @@ import Faq from "../components/faq";
 import ShoesProduct from "../components/ShoesProduct";
 import HeroSectionTwo from "../components/HeroSectionTwo";
 import Testimonial from "../components/Testimonial";
+import CardShows from "../components/CardShows";
 
 const Home = () => {
   return (
@@ -18,6 +19,7 @@ const Home = () => {
       <HeroSectionTwo />
       <ProductsForYou />
       <ShoesProduct />
+      <CardShows />
       <Testimonial />
       <Faq />
       <Footer />
