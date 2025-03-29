@@ -3,11 +3,11 @@ import React from "react";
 const ShoesProduct = () => {
   return (
     <>
-      <div className="bg-gray-200 w-screen p-8 sm:p-16 dark:bg-gray-900">
+      <div className="bg-gray-200  p-8 sm:p-16 dark:bg-gray-900">
         <div className="p-4 mb-4 text-3xl text-center leading-tight first-letter:capitalize font-bold dark:text-gray-100">
           <h3>Amazing Shoes to Explore !!!</h3>
         </div>
-        <div className="mx-auto w-fit grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 gap-6">
+        <div className="mx-auto w-fit grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* card */}
           <div className="relative group bg-gray-200 h-[400px] shadow-lg rounded-2xl overflow-hidden">
             <img

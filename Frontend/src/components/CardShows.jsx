@@ -32,7 +32,7 @@ const CardShows = () => {
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           {/* Product Image Slider */}
-          <div className="relative my-36">
+          <div className="relative ">
             <Swiper
               effect={"coverflow"}
               grabCursor={true}
