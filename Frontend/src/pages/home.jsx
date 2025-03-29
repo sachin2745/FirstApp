@@ -4,6 +4,10 @@ import ProductCarousel from "../components/productCarousel";
 import ShopByCategory from "../components/ShopByCategory";
 import ProductsForYou from "../components/ProductsForYou";
 import Footer from "../components/footer";
+import Faq from "../components/faq";
+import ShoesProduct from "../components/ShoesProduct";
+import HeroSectionTwo from "../components/HeroSectionTwo";
+import Testimonial from "../components/Testimonial";
 
 const Home = () => {
   return (
@@ -11,8 +15,12 @@ const Home = () => {
       <HeroSection />
       <ProductCarousel />
       <ShopByCategory />
+      <HeroSectionTwo />
       <ProductsForYou />
-      <Footer/>
+      <ShoesProduct />
+      <Testimonial />
+      <Faq />
+      <Footer />
     </>
   );
 };
